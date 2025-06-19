@@ -1,15 +1,19 @@
-describe("User Login flow", () => {
+describe("User Registration flow", () => {
   const timestamp = Date.now();
   const user = {
-    email: `advik@gmail.com`,
-    password: "123456",
+    name: "John Doe",
+    email: `john${timestamp}@example.com`,
+    password: "password123",
   };
   beforeEach(() => {
-    cy.visit("/login");
+    cy.visit("/register");
     cy.log("navigated to /register");
   });
-
   it("should register a new user", () => {
+    cy.get('[data-testid="register-name"]')
+      .type(user.name)
+      .should("have.value", user.name);
+
     cy.get('[data-testid="register-email"]')
       .type(user.email)
       .should("have.value", user.email);
@@ -18,7 +22,11 @@ describe("User Login flow", () => {
       .type(user.password)
       .should("have.value", user.password);
 
-    cy.get('[data-testid="login-submit"]').click();
+    cy.get('[data-testid="register-password-confirmation"]')
+      .type(user.password)
+      .should("have.value", user.password);
+
+    cy.get('[data-testid="register-submit"]').click();
     cy.url().should("include", "/dashboard");
     cy.contains("Dashboard").should("be.visible");
 
